@@ -17,11 +17,9 @@ import pandas as pd
 # .trec parsing
 DOC_BLOCK_RE = re.compile(r"<DOC>(.*?)</DOC>", flags=re.S)
 
-
 def _extract_tag(tag: str, block: str) -> str:
     m = re.search(rf"<{tag}>(.*?)</{tag}>", block, flags=re.S)
     return m.group(1).strip() if m else ""
-
 
 def parse_trec_file(path: Path) -> pd.DataFrame:
     text = Path(path).read_text(encoding="utf-8", errors="replace")
@@ -30,16 +28,17 @@ def parse_trec_file(path: Path) -> pd.DataFrame:
     rows = []
     for block in docs:
         doc_id = _extract_tag("DOCNO", block)
+        pre = _extract_tag("PRE", block)
         main_text = _extract_tag("TEXT", block)
         if not doc_id:
             continue
         rows.append({
             "doc_id": doc_id,
+            "pre": pre,
             "text": main_text,
         })
 
     return pd.DataFrame(rows)
-
 
 def load_all_trec(folder: Path) -> pd.DataFrame:
     all_files = sorted(Path(folder).glob("*.trec"))
@@ -58,31 +57,25 @@ def load_qrels(qrels_path: Path) -> pd.DataFrame:
     elif "relevant" in qrels.columns:
         qrels["label"] = qrels["relevant"].map({True: 1, False: 0, 1: 1, 0: 0}).astype(int)
     else:
-        raise ValueError(
-            "qrels must contain either a 'label' column or a 'relevant' column"
-        )
+        raise ValueError("qrels must contain either a 'label' column or a 'relevant' column")
 
     if "doc_id" not in qrels.columns:
         if "DOCNO" in qrels.columns:
             qrels = qrels.rename(columns={"DOCNO": "doc_id"})
         else:
-            raise ValueError(
-                "qrels must contain a 'doc_id' (or 'DOCNO') column to merge with posts"
-            )
+            raise ValueError("qrels must contain a 'doc_id' (or 'DOCNO') column to merge with posts")
 
     return qrels
-
 
 def merge_with_qrels(df_text: pd.DataFrame, qrels: pd.DataFrame) -> pd.DataFrame:
     merged = df_text.merge(qrels[["doc_id", "label"]], on="doc_id", how="inner")
     return merged
 
-
 # minimal post-processing
 def finalize(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=["text"]).drop_duplicates(subset=["doc_id"])
     df["num_tokens"] = df["text"].apply(lambda t: len(str(t).split()))
-    return df[["doc_id", "text", "label", "num_tokens"]]
+    return df[["doc_id", "pre", "text", "label", "num_tokens"]]
 
 
 def main() -> None:
@@ -107,7 +100,7 @@ def main() -> None:
     df_merged = merge_with_qrels(df_text, qrels)
     print(f"  → {len(df_merged):,} labeled documents after merge")
 
-    print("Finalizing (drop PRE/POST, keep raw text, add num_tokens)…")
+    print("Finalizing (keep PRE, drop POST, keep raw text, add num_tokens)…")
     df_final = finalize(df_merged)
 
     out_path = Path(args.output)
@@ -118,7 +111,6 @@ def main() -> None:
         df_final.to_csv(out_path, index=False)
 
     print("Done.")
-
 
 if __name__ == "__main__":
     main()
