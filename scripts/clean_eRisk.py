@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Usage:
-  python clean_eRisk.py \
+  python scripts/clean_eRisk.py \
       --in data/raw/erisk25-t1-dataset \
       --qrels data/raw/qrels_consensus_merged.csv \
       --out data/processed/erisk25_clean.parquet
@@ -110,7 +110,7 @@ def main() -> None:
     else:
         df_final.to_csv(out_path, index=False)
 
-    print("Done.")
+    print("Done")
 
 if __name__ == "__main__":
     main()
