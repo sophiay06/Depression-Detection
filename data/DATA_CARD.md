@@ -107,5 +107,4 @@ Performed via `scripts/split_datasets.py` (grouped by user):
 
 ## 11. More Info
 
-For dataset access and license details, visit the official website:  
-[https://erisk.irlab.org/](https://erisk.irlab.org/)
+For dataset access and license details, visit the official website: [https://erisk.irlab.org/](https://erisk.irlab.org/)
