@@ -23,7 +23,7 @@
 | **pre**        | Pre-text metadata (from original TREC)            |
 
 - Total posts (after cleaning): 10,383
-- Total unique users: 2,840
+- Total unique users: 7,921
 - Average posts per user: 3.66
 - Average tokens per post: 11.47
 - Min / Max tokens per post: 1 / 326
