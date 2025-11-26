@@ -1,4 +1,3 @@
-# scripts/baseline_tfidf.py
 # TF-IDF + Logistic Regression baseline
 
 import argparse
@@ -145,4 +144,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
