@@ -3,3 +3,4 @@
 venv/
 data/raw
 .ipynb_checkpoints/
+fine_tuned_bert/
