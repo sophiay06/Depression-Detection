@@ -1,5 +1,5 @@
 # scripts/baseline_tfidf.py
-# TF-IDF + Logistic Regression baseline (author-aware split)
+# TF-IDF + Logistic Regression baseline
 
 import argparse
 from pathlib import Path
@@ -145,3 +145,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
