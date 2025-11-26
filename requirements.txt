@@ -8,3 +8,6 @@ tqdm
 pyyaml
 pyarrow
 joblib
+torch
+transformers
+ipywidgets
