@@ -15,7 +15,7 @@ def parse_args():
     ap.add_argument("--text_col", default="text", help="Column containing message text")
     ap.add_argument("--label_col", default="label", help="Column containing binary label (0/1)")
     ap.add_argument("--user_col", default="user_id", help="Column with user identifier")
-    ap.add_argument("--level", choices=["user", "message"], default="user",
+    ap.add_argumbut ent("--level", choices=["user", "message"], default="user",
                     help="user = concatenate per user, message = treat each row separately")
     ap.add_argument("--test_size", type=float, default=0.30)
     ap.add_argument("--random_state", type=int, default=42)
@@ -38,7 +38,7 @@ def load_dataframe(path: Path):
 
 
 def make_user_level(df, text_col, label_col, user_col):
-    """Concatenate all messages per user into one row."""
+    """Concatenate messages"""
     return (
         df.groupby([user_col, label_col])[text_col]
         .apply(lambda x: "\n".join(x.astype(str)))
@@ -121,7 +121,6 @@ def main():
     print(f"Macro-F1 : {macro_f1:.3f}")
     print(report)
 
-    # Save outputs
     out_dir = Path(args.results_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "tfidf_report.txt").write_text(
@@ -133,7 +132,6 @@ def main():
         out_dir / "tfidf_predictions.csv", index=False
     )
 
-    # Try saving model + vectorizer
     try:
         import joblib
         joblib.dump(vect, out_dir / "tfidf_vectorizer.joblib")
@@ -144,5 +142,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
