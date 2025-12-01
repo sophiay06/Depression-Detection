@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Usage:
   python scripts/clean_eRisk.py \
@@ -14,7 +13,6 @@ import sys
 from pathlib import Path
 import pandas as pd
 
-# .trec parsing
 DOC_BLOCK_RE = re.compile(r"<DOC>(.*?)</DOC>", flags=re.S)
 
 def _extract_tag(tag: str, block: str) -> str:
@@ -48,7 +46,6 @@ def load_all_trec(folder: Path) -> pd.DataFrame:
     dfs = [parse_trec_file(f) for f in all_files]
     return pd.concat(dfs, ignore_index=True)
 
-# qrels loading/merging
 def load_qrels(qrels_path: Path) -> pd.DataFrame:
     qrels = pd.read_csv(qrels_path)
 
@@ -71,7 +68,6 @@ def merge_with_qrels(df_text: pd.DataFrame, qrels: pd.DataFrame) -> pd.DataFrame
     merged = df_text.merge(qrels[["doc_id", "label"]], on="doc_id", how="inner")
     return merged
 
-# minimal post-processing
 def finalize(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=["text"]).drop_duplicates(subset=["doc_id"])
     df["num_tokens"] = df["text"].apply(lambda t: len(str(t).split()))

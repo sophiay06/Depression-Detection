@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Usage:
   python scripts/split_datasets.py \
