@@ -1,6 +1,4 @@
 # scripts/baseline_tfidf_svm.py
-# Message-level baseline: TF-IDF (character 3–5 grams) + LinearSVC
-# No author-aware grouping (quick baseline / smoke test).
 
 import argparse
 from pathlib import Path
@@ -93,3 +91,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
